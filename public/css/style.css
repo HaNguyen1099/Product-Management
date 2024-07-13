@@ -1,3 +1,7 @@
+body {
+    height: 100%;
+}
+
 /* Header */
 .header {
     border-bottom: 1px solid #ddd;
@@ -29,10 +33,8 @@
 
 /* Footer */
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     text-align: center;
+    padding: 10px
 }
 
 /* Box head */
@@ -70,7 +72,7 @@
     padding: 15px
 }
 
-.product-item .inner-content .inner-title {
+.product-item .inner-content h3.inner-title {
     font-weight: 600;
     font-size: 20px;
 }

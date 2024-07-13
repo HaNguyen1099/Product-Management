@@ -8,12 +8,13 @@ block main
                 +box-head("Danh sách sản phẩm")
 
         .row 
-            .col-4.mb-3 
-                .product-item 
-                    .inner-image 
-                        img(src="", alt="title")
-                    .inner-content 
-                        h2.inner-title Iphone 9
-                        .inner-price-new 80$
-                        .inner-price-old 100$
-                        .inner-discount -20%
+            each i in products
+                .col-4.mb-3 
+                    .product-item 
+                        .inner-image 
+                            img(src=i.thumbnail, alt=i.title)
+                        .inner-content 
+                            h3.inner-title #{i.title}
+                            .inner-price-new #{i.priceNew}$
+                            .inner-price-old #{i.price}$
+                            .inner-discount #{i.discountPercentage}%
