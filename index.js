@@ -1,9 +1,11 @@
 const express = require("express")
 require("dotenv").config()
 
+const database = require("./config/database")
+
 const route = require("./routes/client/index.route")
-// const mongoose = require("mongoose")
-// mongoose.connect('mongodb://127.0.0.1:27017/products-management')
+
+database.connect()
 
 const app = express()
 const port = process.env.PORT
