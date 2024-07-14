@@ -13,25 +13,18 @@ block main
                 th Trạng thái 
                 th Hành động
         tbody
+            each i, index in products
                 tr 
-                    td 1
+                    td #{index+1}
                     td 
-                        img(src="" alt="Sản phẩm 1" width="100px" height="auto")
-                    td "Sản phẩm 1"
-                    td "100$"
+                        img(src=i.thumbnail alt=i.title width="100px" height="auto")
+                    td #{i.title}
+                    td #{i.price}$
                     td 
-                        a(href="#" class="badge badge-danger") Ngừng hoạt động 
+                        if (i.status == "active") 
+                            a(href="#" class="badge badge-success") Hoạt động
+                        else
+                            a(href="#" class="badge badge-danger") Ngừng hoạt động 
                     td 
                         button(class="btn btn-warning btn-sm ml-1") Sửa
-                        button(class="btn btn-danger btn-sm ml-1") Xóa
-                tr 
-                    td 2
-                    td 
-                        img(src="" alt="Sản phẩm 2" width="100px" height="auto")
-                    td "Sản phẩm 2"
-                    td "199$"
-                    td 
-                        a(href="#" class="badge badge-success") Hoạt động     
-                    td 
-                        button(class="btn btn-warning btn-sm ml-1") Sửa
-                        button(class="btn btn-danger btn-sm ml-1") Xóa
+                        button(class="btn btn-danger btn-sm ml-1") Xóa    
