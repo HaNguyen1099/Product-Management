@@ -3,28 +3,41 @@ extends ../../layouts/default.pug
 block main 
     h1 Trang danh sách sản phẩm
 
-    table(class="table table-hover table-sm")
-        thead 
-            tr
-                th STT 
-                th Hình ảnh 
-                th Tiêu đề
-                th Giá
-                th Trạng thái 
-                th Hành động
-        tbody
-            each i, index in products
-                tr 
-                    td #{index+1}
-                    td 
-                        img(src=i.thumbnail alt=i.title width="100px" height="auto")
-                    td #{i.title}
-                    td #{i.price}$
-                    td 
-                        if (i.status == "active") 
-                            a(href="#" class="badge badge-success") Hoạt động
-                        else
-                            a(href="#" class="badge badge-danger") Ngừng hoạt động 
-                    td 
-                        button(class="btn btn-warning btn-sm ml-1") Sửa
-                        button(class="btn btn-danger btn-sm ml-1") Xóa    
+    .card.mb-3 
+        .card-header Bộ lọc và Tìm kiếm 
+        .card-body 
+            .row
+                each i in filterStatus
+                    button(
+                        class=`btn btn-sm ml-1 btn-outline-success ${i.class}`
+                        button-status=i.status
+                    ) #{i.name}
+
+    .card.mb-3 
+        .card-header Danh sách sản phẩm 
+        .card-body 
+            table(class="table table-hover table-sm")
+                thead 
+                    tr
+                        th STT 
+                        th Hình ảnh 
+                        th Tiêu đề
+                        th Giá
+                        th Trạng thái 
+                        th Hành động
+                tbody
+                    each i, index in products
+                        tr 
+                            td #{index+1}
+                            td 
+                                img(src=i.thumbnail alt=i.title width="100px" height="auto")
+                            td #{i.title}
+                            td #{i.price}$
+                            td 
+                                if (i.status == "active") 
+                                    a(href="#" class="badge badge-success") Hoạt động
+                                else
+                                    a(href="#" class="badge badge-danger") Ngừng hoạt động 
+                            td 
+                                button(class="btn btn-warning btn-sm ml-1") Sửa
+                                button(class="btn btn-danger btn-sm ml-1") Xóa    
