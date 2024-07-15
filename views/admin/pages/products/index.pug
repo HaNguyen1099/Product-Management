@@ -7,11 +7,27 @@ block main
         .card-header Bộ lọc và Tìm kiếm 
         .card-body 
             .row
-                each i in filterStatus
-                    button(
-                        class=`btn btn-sm ml-1 btn-outline-success ${i.class}`
-                        button-status=i.status
-                    ) #{i.name}
+                .col-6
+                    each i in filterStatus
+                        button(
+                            class=`btn btn-sm ml-1 btn-outline-success ${i.class}`
+                            button-status=i.status
+                        ) #{i.name}
+                .col-6 
+                    form(id="form-search")
+                        .input-group 
+                            input(
+                                type="text"
+                                placeholder="Nhập từ khóa"
+                                name="keyword"
+                                class="form-control"
+                                value=keyword
+                            )
+                            .input-group-append 
+                                button(
+                                    class="btn btn-success"
+                                    type="submit"
+                                ) Tìm kiếm
 
     .card.mb-3 
         .card-header Danh sách sản phẩm 
