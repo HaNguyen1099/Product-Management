@@ -10,7 +10,6 @@ module.exports.index = async (req, res) => {
         deleted: false
     }
     
-    // Filter status
     if (req.query.status) {
         find.status = req.query.status
     }
@@ -21,12 +20,32 @@ module.exports.index = async (req, res) => {
         find.title = objectSearch.regex
     }
 
+    // Pagination
+    let objectPagination = {
+        limitItems: 4,
+        currentPage: 1,
+
+    }
+
+    if (req.query.page) {
+        objectPagination.currentPage = parseInt(req.query.page)
+    }
+
+    objectPagination.skip = (objectPagination.currentPage - 1) * objectPagination.limitItems
+
+    const countProducts = await Product.countDocuments(find)
+    const totalPage = Math.ceil(countProducts / objectPagination.limitItems)
+    objectPagination.totalPage = totalPage
+
     const products = await Product.find(find)
+                        .limit(objectPagination.limitItems)
+                        .skip(objectPagination.skip)
 
     res.render("admin/pages/products/index", {
         pageTitle: "Danh sách sản phẩm",
         products: products,
         filterStatus: filterStatus,
-        keyword: objectSearch.keyword
+        keyword: objectSearch.keyword,
+        pagination: objectPagination
     })
 }
