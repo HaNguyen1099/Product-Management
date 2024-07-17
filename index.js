@@ -1,5 +1,6 @@
 const express = require("express")
 var methodOverride = require('method-override')
+const bodyParser = require('body-parser')
 require("dotenv").config()
 
 const database = require("./config/database")
@@ -12,6 +13,8 @@ database.connect()
 
 const app = express()
 const port = process.env.PORT
+
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(methodOverride('_method'))
 
