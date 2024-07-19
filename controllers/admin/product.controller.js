@@ -83,9 +83,7 @@ module.exports.changeMulti = async (req, res) => {
                 position = parseInt(position)
                 await Product.updateMany({_id: id}, { position: position })
             }
-            break
-        case "change-position":
-            await Product.updateMany({_id: { $in: ids } }, {  })
+            req.flash("success", `Cập nhật vị trí thành công ${ids.length} sản phẩm!`)
             break
         default:
             break
