@@ -69,8 +69,16 @@ block main
                 id="thumbnail"
                 name="thumbnail"
                 accept="image/*"
-                
+                upload-image-input
             )
+            div(class="image-container")
+                img(
+                    src=""
+                    upload-image-preview
+                    class="image-preview"
+                )
+                button.close(type='button', aria-label='Close' class="close-button d-none")
+                    span(aria-hidden='true') &times;
         div(class="form-group")
             label(for="position") Vị trí
             input(
