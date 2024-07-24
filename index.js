@@ -26,13 +26,13 @@ app.use(cookieParser('keyboard'));
 app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
 
-app.set("views", "./views")
+app.set("views", `${__dirname}/views`)
 app.set("view engine", "pug")
 
 // App Locals Variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin
 
-app.use(express.static("public"))
+app.use(express.static(`${__dirname}/public`))
 
 route(app)
 routeAdmin(app)
