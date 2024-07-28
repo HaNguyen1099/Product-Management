@@ -5,6 +5,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/formChangeMulti.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/table-tree.pug
 
 block main 
     +alert-success(3000)
@@ -37,58 +38,7 @@ block main
                             th Trạng thái 
                             th Hành động
                     tbody 
-                        each i, index in records
-                            tr 
-                                td 
-                                    input(
-                                        type="checkbox"
-                                        name="id"
-                                        value=i.id
-                                    )
-                                td #{i.index}
-                                td 
-                                    img(src=i.thumbnail alt=i.title width="100px" height="auto")
-                                td #{prefix}#{i.title}
-                                td 
-                                    input(
-                                        type="number"
-                                        value=i.position 
-                                        style="width: 60px"
-                                        min="1"
-                                        name="position"
-                                    )
-                                td 
-                                    if(i.status == 'active')
-                                        a(   
-                                            href=("javascript:;") 
-                                            data-status="active"
-                                            data-id=i.id
-                                            button-change-status
-                                            class="badge badge-success"
-                                            ) Hoạt động 
-                                    else if (i.status == 'inactive')
-                                        a(
-                                            href=("javascript:;") 
-                                            data-status="inactive" 
-                                            data-id=i.id
-                                            button-change-status
-                                            class="badge badge-danger"
-                                            ) Ngừng hoạt động 
-                                    
-                                td 
-                                    a(
-                                        href=`${prefixAdmin}/products-category/detail/${i.id}`
-                                        class="btn btn-secondary btn-sm"
-                                    ) Chi tiết
-                                    a(
-                                        href=`${prefixAdmin}/products-category/edit/${i.id}`
-                                        class="btn btn-warning btn-sm ml-1"
-                                    ) Sửa
-                                    button(
-                                        class="btn btn-danger btn-sm ml-1"
-                                        button-delete
-                                        data-id=i.id
-                                    ) Xóa
+                        +table-tree(records)
 
     script(src="/admin/js/product.js") 
 
