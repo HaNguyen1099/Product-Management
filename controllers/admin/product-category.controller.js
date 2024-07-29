@@ -9,17 +9,34 @@ const systemConfig = require("../../config/system")
 
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
+    // Filter Status
+    const filterStatus = filterStatusHelper(req.query)
+
     let find = {
         deleted: false
     }
 
+    if (req.query.status) {
+        find.status = req.query.status
+    }
+
+    // Search
+    const objectSearch = searchHelper(req.query)
+
+    if (objectSearch.regex) {
+        find.title = objectSearch.regex
+    }
+
     const records = await ProductCategory.find(find)
+                                            
 
     const newRecords = createTreeHelper.tree(records)
   
     res.render("admin/pages/products-category/index", {
-        pageTitle: "Danh sách sản phẩm",
-        records: newRecords
+        pageTitle: "Danh mục sản phẩm",
+        records: newRecords,
+        filterStatus: filterStatus,
+        keyword: objectSearch.keyword,
     })
 }
 
@@ -55,3 +72,46 @@ module.exports.createPost = async (req, res) => {
     res.redirect(`${systemConfig.prefixAdmin}/products-category`)
 }
 
+// [PATCH] /admin/products-category/changeStatus/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    const status = req.params.status
+    const id = req.params.id
+
+    await ProductCategory.updateOne({_id: id}, {status: status})
+
+    req.flash("success", "Thay đổi trạng thái thành công!")
+    res.redirect("back")
+}
+
+// [PATCH] /admin/products-category/changeMulti
+module.exports.changeMulti = async (req, res) => {
+    const type = req.body.type
+    const ids = req.body.ids.split(", ")
+
+    console.log(type)
+    console.log(ids)
+
+    switch (type) {
+        case "active":
+            await ProductCategory.updateMany({_id: { $in: ids } }, { status: "active" })
+            break
+        case "inactive":
+            await ProductCategory.updateMany({_id : { $in: ids } }, { status: "inactive"})
+            break
+        case "delete-all":
+            await ProductCategory.updateMany({_id : { $in: ids } }, { deleted: true, deleteAt: new Date()})
+            break
+        case "change-position":
+            for (const i of ids) {
+                let [id, position] = i.split("-")
+                position = parseInt(position)
+                await Product.updateMany({_id: id}, { position: position })
+            }
+            break
+        default:
+            break
+    }
+
+    req.flash("success", "Thay đổi trạng thái thành công!")
+    res.redirect("back")
+}
