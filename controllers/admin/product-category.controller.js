@@ -164,12 +164,14 @@ module.exports.detail = async (req, res) => {
 
         const record = await ProductCategory.findOne(find)
 
-        const parent = await ProductCategory.findOne({
-            deleted: false,
-            _id : record.parent_id
-        }).select("title")
-
-        record.parentTitle = parent.title
+        if (record.parent_id) {
+            const parent = await ProductCategory.findOne({
+                deleted: false,
+                _id : record.parent_id
+            }).select("title")
+    
+            record.parentTitle = parent.title
+        }
 
         res.render("admin/pages/products-category/detail", {
             pageTitle: "Chi tiết danh mục sản phẩm",
@@ -179,3 +181,4 @@ module.exports.detail = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/products-category`)
     }
 }
+
