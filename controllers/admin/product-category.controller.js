@@ -115,3 +115,41 @@ module.exports.changeMulti = async (req, res) => {
     req.flash("success", "Thay đổi trạng thái thành công!")
     res.redirect("back")
 }
+
+// [GET] /admin/products-category/edit/:id
+module.exports.edit = async (req, res) => {
+    try {
+        const find = {
+            deleted: false,
+            _id: req.params.id 
+        }
+
+        const record = await ProductCategory.findOne(find)
+
+        const records = await ProductCategory.find({
+            deleted: false
+        })
+
+        const newRecords = createTreeHelper.tree(records)
+
+        res.render("admin/pages/products-category/edit", {
+            pageTitle: "Chỉnh sửa danh mục sản phẩm",
+            record: record,
+            records: newRecords
+        })
+    } catch (error) {
+        res.redirect(`${systemConfig.prefixAdmin}/products-category`)
+    }
+}
+
+// [PATCH] /admin/products-category/edit/:id
+module.exports.editPatch = async (req, res) => {
+    const id = req.params.id 
+
+    req.body.position = parseInt(req.body.position)
+
+    await ProductCategory.updateOne({ _id: id }, req.body)
+
+    req.flash("success", "Cập nhật danh mục thành công!")
+    res.redirect("back")
+}
