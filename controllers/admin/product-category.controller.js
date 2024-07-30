@@ -153,3 +153,29 @@ module.exports.editPatch = async (req, res) => {
     req.flash("success", "Cập nhật danh mục thành công!")
     res.redirect("back")
 }
+
+// [GET] /admin/products-category/detail/:id
+module.exports.detail = async (req, res) => {
+    try {
+        const find = {
+            deleted: false,
+            _id: req.params.id 
+        }
+
+        const record = await ProductCategory.findOne(find)
+
+        const parent = await ProductCategory.findOne({
+            deleted: false,
+            _id : record.parent_id
+        }).select("title")
+
+        record.parentTitle = parent.title
+
+        res.render("admin/pages/products-category/detail", {
+            pageTitle: "Chi tiết danh mục sản phẩm",
+            record: record
+        })
+    } catch (error) {
+        res.redirect(`${systemConfig.prefixAdmin}/products-category`)
+    }
+}
