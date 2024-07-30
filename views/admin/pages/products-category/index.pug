@@ -54,6 +54,13 @@ block main
         data-path=`${prefixAdmin}/products-category/change-status`
     ) 
 
-    script(src="/admin/js/product.js") 
+    form(
+        action="", 
+        method="POST",
+        id="form-delete-item",
+        data-path=`${prefixAdmin}/products-category/delete`
+    ) 
+
+    script(src="/admin/js/product-category.js") 
 
     

@@ -182,3 +182,17 @@ module.exports.detail = async (req, res) => {
     }
 }
 
+
+// [DELETE] /admin/products-category/delete/:id
+module.exports.delete = async (req, res) => {
+    const id = req.params.id
+
+    await ProductCategory.updateOne(
+        { _id : id }, 
+        {deleted: true, deleteAt: new Date()}
+    )
+
+    req.flash("success", "Đã xóa danh mục thành công!")
+    res.redirect("back")
+}
+
