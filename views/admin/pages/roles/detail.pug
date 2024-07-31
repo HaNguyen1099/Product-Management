@@ -1,0 +1,68 @@
+extends ../../layouts/default.pug 
+
+block main 
+    if (data.title)
+        h1(class="mb-4") #{data.title}
+
+    if (data.description)
+        div(class="mb-4") !{data.description}
+
+    if (data.permissions.length > 0) 
+        h5(class="mb-4") Phân quyền
+        table(
+            class="table table-hover table-sm mt-3"
+        )
+            thead 
+                tr 
+                    th Quyền 
+                    th Mô tả 
+            tbody 
+                if (data.permissions.includes("products-category_view")) 
+                    tr 
+                        td Danh mục sản phẩm
+                        td Xem
+                            if data.permissions.includes('products-category_create')
+                                | , Tạo mới
+                            if data.permissions.includes('products-category_edit')
+                                | , Chỉnh sửa
+                            if data.permissions.includes('products-category_delete')
+                                | , Xóa
+                if (data.permissions.includes("products_view")) 
+                    tr 
+                        td Sản phẩm 
+                        td Xem
+                            if data.permissions.includes('products_create')
+                                | , Tạo mới
+                            if data.permissions.includes('products_edit')
+                                | , Chỉnh sửa 
+                            if data.permissions.includes('products_delete')
+                                | , Xóa
+                if (data.permissions.includes("roles_view")) 
+                    tr 
+                        td Nhóm quyền
+                        td Xem
+                            if data.permissions.includes('roles_create')
+                                | , Tạo mới 
+                            if data.permissions.includes('roles_edit')
+                                | , Chỉnh sửa 
+                            if data.permissions.includes('roles_delete')
+                                | , Xóa
+                if (data.permissions.includes("accounts_view")) 
+                    tr 
+                        td Tài khoản 
+                        td Xem
+                            if data.permissions.includes('accounts_create')
+                                | , Tạo mới 
+                            if data.permissions.includes('accounts_edit')
+                                | , Chỉnh sửa 
+                            if data.permissions.includes('accounts_delete')
+                                | , Xóa
+
+
+    
+    a(
+        href=`${prefixAdmin}/roles/edit/${data.id}`
+        class="btn btn-warning btn-sm"
+    ) Chỉnh sửa
+
+    script(src="/admin/js/product.js") 

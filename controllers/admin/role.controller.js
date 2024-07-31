@@ -94,3 +94,19 @@ module.exports.permissionsPatch = async (req, res) => {
         req.flash("error", "Cập nhật phân quyền thất bại!")
     }
 }
+
+// [GET] /admin/roles/detail/:id
+module.exports.detail = async (req, res) => {
+    try {
+        const id = req.params.id
+
+        const data = await Role.findOne({_id: id, deleted: false})
+
+        res.render("admin/pages/roles/detail", {
+            pageTitle: "Chi tiết nhóm quyền",
+            data: data
+        })
+    } catch (error) {
+        res.redirect(`${systemConfig.prefixAdmin}/roles`)
+    }
+}
