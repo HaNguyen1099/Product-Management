@@ -110,3 +110,18 @@ module.exports.detail = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/roles`)
     }
 }
+
+// [DELETE] /admin/roles/delete/:id
+module.exports.delete = async (req, res) => {
+    try {
+        const id = req.params.id
+        console.log(id)
+        
+        await Role.updateOne({ _id: id }, { deleted: true, deleteAt: new Date() })
+
+        req.flash("success", "Đã xóa nhóm quyền thành công!")
+    } catch (error) {
+        req.flash("error", "Xóa nhóm quyền thất bại!")
+    }
+    res.redirect("back")
+}

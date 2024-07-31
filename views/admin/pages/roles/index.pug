@@ -42,9 +42,18 @@ block main
                                     ) Sửa
                                     button(
                                         class="btn btn-danger btn-sm ml-1"
+                                        data-id = i.id
+                                        button-delete
                                     ) Xóa
                     else 
                         tr 
                             td(colspan="4" class="text-center") Chưa có nhóm quyền được tạo.
 
-                script(src="/admin/roles.js") 
+    form(
+        action="", 
+        method="POST",
+        id="form-delete-item",
+        data-path=`${prefixAdmin}/roles/delete`
+    ) 
+
+    script(src="/admin/js/role.js") 
