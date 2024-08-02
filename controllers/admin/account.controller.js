@@ -181,3 +181,18 @@ module.exports.detail = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/accounts`)
     }
 }
+
+// [DELETE] /admin/accounts/delete/:id
+module.exports.delete = async (req, res) => {
+    try {
+        const id = req.params.id
+        console.log(id)
+
+        await Account.updateOne({ _id: id }, { deleted: true, deleteAt: new Date() })
+
+        req.flash("success", "Đã xóa tài khoản thành công!")
+    } catch (error) {
+        req.flash("error", "Xóa tài khoản thất bại!")
+    }
+    res.redirect("back")
+}
