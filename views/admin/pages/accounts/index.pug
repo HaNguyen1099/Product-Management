@@ -1,7 +1,24 @@
 extends ../../layouts/default.pug 
 
+include ../../mixins/filter-status.pug
+include ../../mixins/search.pug
+include ../../mixins/pagination.pug
+include ../../mixins/alert.pug
+
 block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
     h1(class="mb-4") Danh sách tài khoản 
+
+    .card.mb-3 
+        .card-header Bộ lọc và Tìm kiếm 
+        .card-body 
+            .row
+                .col-6
+                    +filter-status(filterStatus)
+                .col-6 
+                    +search(keyword)
 
     .card.mb-3 
         .card-header Danh sách 
@@ -15,7 +32,7 @@ block main
                     ) + Thêm mới 
             
             table(
-                class="table table-hover table-sm"
+                class="table table-hover table-sm mt-3"
             )
                 thead 
                     tr 
@@ -45,7 +62,7 @@ block main
                                 td 
                                     if(i.status == 'active')
                                         a(
-                                            href="javascript;"
+                                            href="javascript:;"
                                             data-status="active"
                                             data-id=i.id
                                             button-change-status
@@ -53,7 +70,7 @@ block main
                                             ) Hoạt động 
                                     else 
                                         a(
-                                            href="javascript;"
+                                            href="javascript:;"
                                             data-status="inactive" 
                                             data-id=i.id
                                             button-change-status
@@ -74,3 +91,16 @@ block main
                     else 
                         tr 
                             td(colspan="4" class="text-center") Chưa có tài khoản được tạo.
+
+    form(
+        action="", 
+        method="POST",
+        id="form-change-status",
+        data-path=`${prefixAdmin}/accounts/change-status`
+    ) 
+
+    if (pagination.totalPage > 1)                       
+        +pagination(pagination)
+    
+    script(src="/admin/js/account.js") 
+

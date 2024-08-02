@@ -29,4 +29,6 @@ router.patch(
     validate.editPatch,
     controller.editPatch)
 
+router.patch("/change-status/:status/:id", controller.changeStatus)
+
 module.exports = router

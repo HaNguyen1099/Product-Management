@@ -3,15 +3,48 @@ const md5 = require("md5")
 const Account = require("../../models/account.model")
 const Role = require("../../models/role.model")
 
+const filterStatusHelper = require("../../helpers/filterStatus")
+const searchHelper = require("../../helpers/search")
+const paginationHelper = require("../../helpers/pagination")
+
 const systemConfig = require("../../config/system")
 
 // [GET] /admin/accounts/
 module.exports.index = async (req, res) => {
+    // FilterStatus 
+    const filterStatus = filterStatusHelper(req.query)
+
     let find = {
         deleted: false 
     }
 
-    const records = await Account.find(find).select("-password -token")
+    if (req.query.status) {
+        find.status = req.query.status 
+    }
+
+    // Search 
+    const objectSearch = searchHelper(req.query)
+
+    if (objectSearch.regex) {
+        find.fullName = objectSearch.regex
+    }
+
+    // Pagination
+    const countAccounts = await Account.countDocuments(find)
+
+    let objectPagination = paginationHelper(
+        {
+            limitItems: 4,
+            currentPage: 1,
+        },
+        req.query,
+        countAccounts
+    )
+    
+    const records = await Account.find(find)
+                                .select("-password -token")
+                                .limit(objectPagination.limitItems)
+                                .skip(objectPagination.skip)
 
     for (const record of records) {
         const role = await Role.findOne({
@@ -23,7 +56,10 @@ module.exports.index = async (req, res) => {
 
     res.render("admin/pages/accounts/index", {
         pageTitle: "Danh sách tài khoản",
-        records: records
+        records: records,
+        filterStatus: filterStatus,
+        keyword: objectSearch.keyword,
+        pagination: objectPagination
     })
 }
 
@@ -109,3 +145,15 @@ module.exports.editPatch = async (req, res) => {
 
     res.redirect("back")
 }
+
+// [PATCH] /admin/accounts/changeStatus/:status/:id
+module.exports.changeStatus = async (req, res) => {
+    const status = req.params.status
+    const id = req.params.id
+
+    await Account.updateOne({_id: id}, {status: status})
+
+    req.flash("success", "Thay đổi trạng thái thành công!")
+    res.redirect("back")
+}
+
