@@ -157,3 +157,27 @@ module.exports.changeStatus = async (req, res) => {
     res.redirect("back")
 }
 
+// [GET] /admin/accounts/detail/:id
+module.exports.detail = async (req, res) => {
+    let find = {
+        _id: req.params.id,
+        deleted: false
+    } 
+
+    try {
+        const data = await Account.findOne(find)
+
+        data.role = await Role.findOne({
+            _id: data.role_id,
+            deleted: false
+        })
+
+        res.render("admin/pages/accounts/detail", {
+            pageTitle:"Chi tiết tài khoản",
+            data: data
+        })
+
+    } catch (error) {
+        res.redirect(`${systemConfig.prefixAdmin}/accounts`)
+    }
+}
