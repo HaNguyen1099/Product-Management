@@ -21,21 +21,31 @@ mixin table-tree(records, level = 1)
                     name="position"
                 )
             td 
-                if(i.status == 'active')
-                    a(   
-                        href=("javascript:;") 
-                        data-status="active"
-                        data-id=i.id
-                        button-change-status
-                        class="badge badge-success"
+                if (role.permissions.includes("products-category_edit"))
+                    if(i.status == 'active')
+                        a(   
+                            href=("javascript:;") 
+                            data-status="active"
+                            data-id=i.id
+                            button-change-status
+                            class="badge badge-success"
                         ) Hoạt động 
-                else if (i.status == 'inactive')
-                    a(
-                        href=("javascript:;") 
-                        data-status="inactive" 
-                        data-id=i.id
-                        button-change-status
-                        class="badge badge-danger"
+                    else if (i.status == 'inactive')
+                        a(
+                            href=("javascript:;") 
+                            data-status="inactive" 
+                            data-id=i.id
+                            button-change-status
+                            class="badge badge-danger"
+                        ) Ngừng hoạt động 
+                else 
+                    if(i.status == 'active')
+                        span(    
+                            class="badge badge-success"
+                        ) Hoạt động 
+                    else if (i.status == 'inactive')
+                        span(
+                            class="badge badge-danger"
                         ) Ngừng hoạt động 
                 
             td 
@@ -43,15 +53,17 @@ mixin table-tree(records, level = 1)
                     href=`${prefixAdmin}/products-category/detail/${i.id}`
                     class="btn btn-secondary btn-sm"
                 ) Chi tiết
-                a(
-                    href=`${prefixAdmin}/products-category/edit/${i.id}`
-                    class="btn btn-warning btn-sm ml-1"
-                ) Sửa
-                button(
-                    class="btn btn-danger btn-sm ml-1"
-                    button-delete
-                    data-id=i.id
-                ) Xóa
+                if (role.permissions.includes("products-category_edit"))
+                    a(
+                        href=`${prefixAdmin}/products-category/edit/${i.id}`
+                        class="btn btn-warning btn-sm ml-1"
+                    ) Sửa
+                if (role.permissions.includes("products-category_delete"))
+                    button(
+                        class="btn btn-danger btn-sm ml-1"
+                        button-delete
+                        data-id=i.id
+                    ) Xóa
         
         if (i.children && i.children.length > 0)
                 +table-tree(i.children, level + 1)

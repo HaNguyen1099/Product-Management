@@ -58,11 +58,10 @@ block main
                             if data.permissions.includes('accounts_delete')
                                 | , Xóa
 
-
-    
-    a(
-        href=`${prefixAdmin}/roles/edit/${data.id}`
-        class="btn btn-warning btn-sm"
-    ) Chỉnh sửa
+    if (role.permissions.includes("roles_edit"))
+        a(
+            href=`${prefixAdmin}/roles/edit/${data.id}`
+            class="btn btn-warning btn-sm"
+        ) Chỉnh sửa
 
     script(src="/admin/js/product.js") 

@@ -27,10 +27,11 @@ block main
 
     if (record.description)
         div(class="mb-4") !{record.description}
-    
-    a(
-        href=`${prefixAdmin}/products-category/edit/${record.id}`
-        class="btn btn-warning btn-sm"
-    ) Chỉnh sửa
+        
+    if (role.permissions.includes("products-category_edit"))
+        a(
+            href=`${prefixAdmin}/products-category/edit/${record.id}`
+            class="btn btn-warning btn-sm"
+        ) Chỉnh sửa
 
     script(src="/admin/js/product.js") 
