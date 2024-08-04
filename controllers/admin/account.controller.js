@@ -199,7 +199,13 @@ module.exports.delete = async (req, res) => {
         const id = req.params.id
         console.log(id)
 
-        await Account.updateOne({ _id: id }, { deleted: true, deleteAt: new Date() })
+        await Account.updateOne({ _id: id }, { 
+            deleted: true, 
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            } 
+        })
 
         req.flash("success", "Đã xóa tài khoản thành công!")
     } catch (error) {
