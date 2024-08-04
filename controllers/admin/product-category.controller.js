@@ -115,7 +115,13 @@ module.exports.changeMulti = async (req, res) => {
             await ProductCategory.updateMany({_id : { $in: ids } }, { status: "inactive"})
             break
         case "delete-all":
-            await ProductCategory.updateMany({_id : { $in: ids } }, { deleted: true, deleteAt: new Date()})
+            await ProductCategory.updateMany({_id : { $in: ids } }, { 
+                deleted: true, 
+                deletedBy: {
+                    account_id: res.locals.user.id,
+                    deletedAt: new Date()
+                }
+            })
             break
         case "change-position":
             for (const i of ids) {
@@ -198,14 +204,19 @@ module.exports.detail = async (req, res) => {
     }
 }
 
-
 // [DELETE] /admin/products-category/delete/:id
 module.exports.delete = async (req, res) => {
     const id = req.params.id
 
     await ProductCategory.updateOne(
         { _id : id }, 
-        {deleted: true, deleteAt: new Date()}
+        {
+            deleted: true, 
+            deletedBy: {
+                account_id: res.locals.user.id,
+                deletedAt: new Date()
+            }
+        }
     )
 
     req.flash("success", "Đã xóa danh mục thành công!")
