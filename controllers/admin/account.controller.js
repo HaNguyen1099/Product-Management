@@ -52,6 +52,15 @@ module.exports.index = async (req, res) => {
             deleted: false
         })
         record.role = role
+
+        // Lấy ra thông tin người tạo
+        const user = await Account.findOne({
+            _id: record.createdBy.account_id
+        })
+
+        if (user) {
+            record.accountFullName = user.fullName
+        }
     }
 
     res.render("admin/pages/accounts/index", {
@@ -85,6 +94,10 @@ module.exports.createPost = async (req, res) => {
     if (!emailExist) {
         req.body.password = md5(req.body.password)
 
+        req.body.createdBy = {
+            account_id: res.locals.user.id
+        }
+
         const record = new Account(req.body)
         await record.save()
 
@@ -93,8 +106,6 @@ module.exports.createPost = async (req, res) => {
         req.flash("error", `Email ${req.body.email} đã tồn tại!`)
         res.redirect("back")
     }
-
-    
 }
 
 // [GET] /admin/accounts/edit/:id

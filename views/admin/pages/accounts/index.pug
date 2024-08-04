@@ -4,6 +4,7 @@ include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/alert.pug
+include ../../mixins/moment.pug
 
 block main 
     +alert-success(3000)
@@ -44,6 +45,7 @@ block main
                             th Phân quyền 
                             th Email 
                             th Trạng thái 
+                            th Người tạo
                             th Hành động
                     
                     tbody 
@@ -88,6 +90,10 @@ block main
                                                 span(
                                                     class="badge badge-danger"
                                                 ) Ngừng hoạt động 
+                                    td 
+                                        p #{i.accountFullName}
+                                        p 
+                                            +formatDateTime(i.createdBy.createdAt)
                                     td 
                                         a(
                                             class="btn btn-secondary btn-sm"
