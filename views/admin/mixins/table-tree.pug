@@ -1,3 +1,5 @@
+include moment.pug
+
 mixin table-tree(records, level = 1)
     each i, index in records
         - const prefix = Array(level + 1).join("-- ")
@@ -47,7 +49,10 @@ mixin table-tree(records, level = 1)
                         span(
                             class="badge badge-danger"
                         ) Ngừng hoạt động 
-                
+            td 
+                p #{i.accountFullName}
+                p 
+                    +formatDateTime(i.createdBy.createdAt)  
             td 
                 a(
                     href=`${prefixAdmin}/products-category/detail/${i.id}`

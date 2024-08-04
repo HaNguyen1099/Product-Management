@@ -1,5 +1,6 @@
 const Product = require("../../models/product.model")
 const ProductCategory = require("../../models/product-category.model")
+const Account = require("../../models/account.model")
 
 const filterStatusHelper = require("../../helpers/filterStatus")
 const searchHelper = require("../../helpers/search")
@@ -28,7 +29,18 @@ module.exports.index = async (req, res) => {
     }
 
     const records = await ProductCategory.find(find)
-                                            
+
+    for (const record of records) {
+        // Lấy ra thông tin người tạo
+        const user = await Account.findOne({
+            _id: record.createdBy.account_id
+        })
+
+        if (user) {
+            record.accountFullName = user.fullName
+            console.log(record.accountFullName)
+        }
+    }                                  
 
     const newRecords = createTreeHelper.tree(records)
   
@@ -64,6 +76,10 @@ module.exports.createPost = async (req, res) => {
         req.body.position = count + 1
     } else {
         req.body.position = parseInt(req.body.position)
+    }
+
+    req.body.createdBy = {
+        account_id: res.locals.user.id
     }
 
     const record = new ProductCategory(req.body)
