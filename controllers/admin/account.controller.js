@@ -61,6 +61,16 @@ module.exports.index = async (req, res) => {
         if (user) {
             record.accountFullName = user.fullName
         }
+
+        // Lấy ra thông tin cập nhật gần nhất
+        const updatedBy = record.updatedBy[record.updatedBy.length-1]
+        if (updatedBy) {
+            const userUpdated = await Account.findOne({
+                _id: updatedBy.account_id
+            })
+
+            updatedBy.accountFullName =  userUpdated.fullName
+        }
     }
 
     res.render("admin/pages/accounts/index", {
@@ -146,8 +156,16 @@ module.exports.editPatch = async (req, res) => {
         } else {
             delete req.body.password
         }
+
+        const updatedBy = {
+            account_id: res.locals.user.id,
+            updatedAt: new Date()
+        }
     
-        await Account.updateOne({_id: req.params.id}, req.body)
+        await Account.updateOne({_id: req.params.id}, {
+            ...req.body,
+            $push: {updatedBy: updatedBy}
+        })
     
         req.flash("success", "Cập nhật tài khoản thành công!")
     } else {
@@ -162,7 +180,15 @@ module.exports.changeStatus = async (req, res) => {
     const status = req.params.status
     const id = req.params.id
 
-    await Account.updateOne({_id: id}, {status: status})
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date()
+    }
+
+    await Account.updateOne({_id: id}, {
+        status: status,
+        $push: {updatedBy: updatedBy}
+    })
 
     req.flash("success", "Thay đổi trạng thái thành công!")
     res.redirect("back")
