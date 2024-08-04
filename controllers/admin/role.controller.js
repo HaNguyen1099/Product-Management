@@ -1,4 +1,5 @@
 const Role = require("../../models/role.model")
+const Account = require("../../models/account.model")
 
 const systemConfig = require("../../config/system")
 
@@ -9,6 +10,17 @@ module.exports.index = async (req, res) => {
     }
 
     const records = await Role.find(find)
+
+    for (const record of records) {
+        // Lấy ra thông tin người tạo
+        const user = await Account.findOne({
+            _id: record.createdBy.account_id
+        })
+
+        if (user) {
+            record.accountFullName = user.fullName
+        }
+    }
 
     res.render("admin/pages/roles/index", {
         pageTitle: "Nhóm quyền",
@@ -25,6 +37,10 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/roles/create
 module.exports.createPost = async (req, res) => {
+    req.body.createdBy = {
+        account_id: res.locals.user.id
+    }
+
     const role = new Role(req.body)
     await role.save()
 
