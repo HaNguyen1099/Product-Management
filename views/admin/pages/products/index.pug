@@ -1,10 +1,12 @@
 extends ../../layouts/default.pug
+
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/formChangeMulti.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 block main 
     +alert-success(3000)
@@ -55,6 +57,7 @@ block main
                             th Giá
                             th Vị trí
                             th Trạng thái 
+                            th Người tạo
                             th Hành động
                     tbody
                         each i, index in products
@@ -105,6 +108,10 @@ block main
                                             span(
                                                 class="badge badge-danger"
                                             ) Ngừng hoạt động 
+                                td 
+                                    p #{i.accountFullName}
+                                    p 
+                                        +formatDateTime(i.createdBy.createdAt)
                                 td 
                                     a(
                                             href=`${prefixAdmin}/products/detail/${i.id}`
