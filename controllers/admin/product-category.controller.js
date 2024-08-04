@@ -40,6 +40,16 @@ module.exports.index = async (req, res) => {
             record.accountFullName = user.fullName
             console.log(record.accountFullName)
         }
+
+        // Lấy ra thông tin cập nhật gần nhất
+        const updatedBy = record.updatedBy[record.updatedBy.length-1]
+        if (updatedBy) {
+            const userUpdated = await Account.findOne({
+                _id: updatedBy.account_id
+            })
+
+            updatedBy.accountFullName =  userUpdated.fullName
+        }
     }                                  
 
     const newRecords = createTreeHelper.tree(records)
@@ -104,15 +114,23 @@ module.exports.changeMulti = async (req, res) => {
     const type = req.body.type
     const ids = req.body.ids.split(", ")
 
-    console.log(type)
-    console.log(ids)
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date()
+    }
 
     switch (type) {
         case "active":
-            await ProductCategory.updateMany({_id: { $in: ids } }, { status: "active" })
+            await ProductCategory.updateMany({_id: { $in: ids } }, { 
+                status: "active",
+                $push: { updatedBy: updatedBy }
+            })
             break
         case "inactive":
-            await ProductCategory.updateMany({_id : { $in: ids } }, { status: "inactive"})
+            await ProductCategory.updateMany({_id : { $in: ids } }, { 
+                status: "inactive",
+                $push: { updatedBy: updatedBy }
+            })
             break
         case "delete-all":
             await ProductCategory.updateMany({_id : { $in: ids } }, { 
@@ -127,7 +145,10 @@ module.exports.changeMulti = async (req, res) => {
             for (const i of ids) {
                 let [id, position] = i.split("-")
                 position = parseInt(position)
-                await Product.updateMany({_id: id}, { position: position })
+                await Product.updateMany({_id: id}, { 
+                    position: position,
+                    $push: { updatedBy: updatedBy }
+                })
             }
             break
         default:
@@ -169,8 +190,16 @@ module.exports.editPatch = async (req, res) => {
     const id = req.params.id 
 
     req.body.position = parseInt(req.body.position)
+    
+    const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date()
+    }
 
-    await ProductCategory.updateOne({ _id: id }, req.body)
+    await ProductCategory.updateOne({ _id: id }, {
+        ...req.body,
+        $push: { updatedBy: updatedBy }
+    })
 
     req.flash("success", "Cập nhật danh mục thành công!")
     res.redirect("back")

@@ -52,7 +52,13 @@ mixin table-tree(records, level = 1)
             td 
                 p #{i.accountFullName}
                 p 
-                    +formatDateTime(i.createdBy.createdAt)  
+                    +formatDateTime(i.createdBy.createdAt) 
+            td 
+                - const updatedBy = i.updatedBy.slice(-1)[0]
+                if (updatedBy)
+                    p #{updatedBy.accountFullName}
+                    p 
+                        +formatDateTime(updatedBy.updatedAt) 
             td 
                 a(
                     href=`${prefixAdmin}/products-category/detail/${i.id}`
