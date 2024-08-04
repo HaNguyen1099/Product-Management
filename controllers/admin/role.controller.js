@@ -20,6 +20,16 @@ module.exports.index = async (req, res) => {
         if (user) {
             record.accountFullName = user.fullName
         }
+
+        // Lấy ra thông tin cập nhật gần nhất
+        const updatedBy = record.updatedBy[record.updatedBy.length-1]
+        if (updatedBy) {
+            const userUpdated = await Account.findOne({
+                _id: updatedBy.account_id
+            })
+
+            updatedBy.accountFullName =  userUpdated.fullName
+        }
     }
 
     res.render("admin/pages/roles/index", {
@@ -68,7 +78,15 @@ module.exports.editPatch = async (req, res) => {
     try {
         const id = req.params.id 
 
-        await Role.updateOne({ _id : id}, req.body)
+        const updatedBy = {
+            account_id: res.locals.user.id,
+            updatedAt: new Date()
+        }
+
+        await Role.updateOne({ _id : id}, {
+            ...req.body,
+            $push: { updatedBy: updatedBy }
+        })
 
         req.flash("success", "Cập nhật nhóm quyền thành công!")
     } catch (error) {

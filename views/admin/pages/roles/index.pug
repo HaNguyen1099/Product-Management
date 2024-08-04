@@ -29,6 +29,7 @@ block main
                             th Nhóm quyền 
                             th Mô tả ngắn 
                             th Người tạo
+                            th Người cập nhật
                             th Hành động
                     
                     tbody 
@@ -42,6 +43,12 @@ block main
                                         p #{i.accountFullName}
                                         p 
                                             +formatDateTime(i.createdBy.createdAt)
+                                    td 
+                                        - const updatedBy = i.updatedBy.slice(-1)[0]
+                                        if (updatedBy)
+                                            p #{updatedBy.accountFullName}
+                                            p 
+                                                +formatDateTime(updatedBy.updatedAt)
                                     td 
                                         a(
                                             class="btn btn-secondary btn-sm"
