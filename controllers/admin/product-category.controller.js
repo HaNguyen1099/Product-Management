@@ -80,22 +80,29 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products-category/create
 module.exports.createPost = async (req, res) => {
-    if (req.body.position == "") {
-        const count = await ProductCategory.countDocuments()
+    const permissons = res.locals.role.permissions
 
-        req.body.position = count + 1
+    if (permissions.includes("products-category_create")) {
+        if (req.body.position == "") {
+            const count = await ProductCategory.countDocuments()
+    
+            req.body.position = count + 1
+        } else {
+            req.body.position = parseInt(req.body.position)
+        }
+    
+        req.body.createdBy = {
+            account_id: res.locals.user.id
+        }
+    
+        const record = new ProductCategory(req.body)
+        await record.save()
+    
+        res.redirect(`${systemConfig.prefixAdmin}/products-category`)
     } else {
-        req.body.position = parseInt(req.body.position)
+        res.send("403")
     }
-
-    req.body.createdBy = {
-        account_id: res.locals.user.id
-    }
-
-    const record = new ProductCategory(req.body)
-    await record.save()
-
-    res.redirect(`${systemConfig.prefixAdmin}/products-category`)
+    
 }
 
 // [PATCH] /admin/products-category/changeStatus/:status/:id
