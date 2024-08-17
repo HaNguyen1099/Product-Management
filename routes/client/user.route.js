@@ -5,6 +5,8 @@ const controller = require("../../controllers/client/user.controller")
 
 const validate = require("../../validates/client/user.validate")
 
+const middleware = require("../../middleware/client/auth.middleware")
+
 router.get("/register", controller.register)
 
 router.post(
@@ -42,5 +44,10 @@ router.post(
     validate.resetPasswordPost,
     controller.resetPasswordPost
 )
+
+router.get(
+    "/info", 
+    middleware.requireAuth,
+    controller.info)
 
 module.exports = router
