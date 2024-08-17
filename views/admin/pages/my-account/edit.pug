@@ -50,7 +50,10 @@ block main
                 name="phone"
                 value=user.phone
             )
-        div(class="form-group")
+        div(
+            class="form-group"
+            upload-image
+        )
             label(for="avatar") Avatar
             input(
                 type="file"
@@ -60,11 +63,14 @@ block main
                 accept="image/*"
                 upload-image-input
             )
-            img(
-                src=user.avatar 
-                class="image-preview"
-                upload-image-preview 
-            )
+            div(class="image-container")
+                img(
+                    src=user.avatar
+                    upload-image-preview
+                    class="image-preview"
+                )
+                button.close(type='button', aria-label='Close' class="close-button d-none")
+                    span(aria-hidden='true') &times;
         div(class="form-group")
             button(
                 type="submit"
