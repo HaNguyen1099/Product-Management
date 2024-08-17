@@ -1,5 +1,9 @@
 const express = require("express")
+const multer  = require('multer')
 const router = express.Router()
+const upload = multer()
+
+const uploadCloud = require("../../middleware/client/uploadCloud.middleware")
 
 const controller = require("../../controllers/client/user.controller")
 
@@ -49,5 +53,18 @@ router.get(
     "/info", 
     middleware.requireAuth,
     controller.info)
+
+router.get(
+    "/edit", 
+    middleware.requireAuth,
+    controller.edit)
+
+router.patch(
+    "/edit", 
+    middleware.requireAuth,
+    upload.single("avatar"),
+    uploadCloud.upload,
+    validate.editPatch,
+    controller.editPatch)
 
 module.exports = router

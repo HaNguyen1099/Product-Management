@@ -193,3 +193,37 @@ module.exports.info = async (req, res) => {
         pageTitle: "Thông tin tài khoản",
     })
 }
+
+// [GET] /user/edit
+module.exports.edit = async (req, res) => {
+    res.render("client/pages/user/edit", {
+        pageTitle: "Chỉnh sửa thông tin tài khoản",
+    })
+}
+
+// [PATCH] /user/edit
+module.exports.editPatch = async (req, res) => {
+    const tokenUser = req.cookies.tokenUser
+
+    const emailExist = await User.findOne({
+        tokenUser: { $ne: tokenUser },
+        email: req.body.email,
+        deleted: false 
+    })
+
+    if (!emailExist) {
+        if (req.body.password) {
+            req.body.password = md5(req.body.password)
+        } else {
+            delete req.body.password
+        }
+    
+        await User.updateOne({tokenUser: tokenUser}, req.body)
+    
+        req.flash("success", "Cập nhật tài khoản thành công!")
+    } else {
+        req.flash("error", `Email ${req.body.email} đã tồn tại!`)
+    }
+
+    res.redirect("back")
+}
