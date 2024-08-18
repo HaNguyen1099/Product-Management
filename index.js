@@ -1,13 +1,13 @@
 const express = require("express")
-const path = require('path');
+const path = require('path')
 const methodOverride = require('method-override')
 const bodyParser = require('body-parser')
 const flash = require('express-flash')
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
-const moment = require('moment');
+const moment = require('moment')
 const http = require("http")
-const { Server } = require("socket.io");
+const { Server } = require("socket.io")
 require("dotenv").config()
 
 const database = require("./config/database")
@@ -26,9 +26,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(methodOverride('_method'))
 
 // Flash
-app.use(cookieParser('keyboard'));
-app.use(session({ cookie: { maxAge: 60000 }}));
-app.use(flash());
+app.use(cookieParser('keyboard'))
+app.use(session({ cookie: { maxAge: 60000 }}))
+app.use(flash())
 
 // TinyMCE 
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
@@ -39,10 +39,7 @@ app.set("view engine", "pug")
 // SocketIO
 const server = http.createServer(app);
 const io = new Server(server);
-
-io.on('connection', (socket) => {
-    console.log("a user connected", socket.id)
-})
+global._io = io;
 
 // App Locals Variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin
