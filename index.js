@@ -6,6 +6,8 @@ const flash = require('express-flash')
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const moment = require('moment');
+const http = require("http")
+const { Server } = require("socket.io");
 require("dotenv").config()
 
 const database = require("./config/database")
@@ -34,6 +36,14 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 app.set("views", `${__dirname}/views`)
 app.set("view engine", "pug")
 
+// SocketIO
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+    console.log("a user connected", socket.id)
+})
+
 // App Locals Variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin
 app.locals.moment = moment
@@ -49,6 +59,6 @@ app.get("*", (req, res) => {
     })
 })
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App listening on port ${port}`)
 }) 
