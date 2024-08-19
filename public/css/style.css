@@ -404,3 +404,13 @@ body {
     width: 90px;
     background-size: contain;
 }
+
+/* Emoji Picker */
+.tooltip {
+    visibility: hidden;
+}
+
+.tooltip.shown {
+    visibility: visible;
+    opacity: 1;
+}
