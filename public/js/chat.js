@@ -32,5 +32,13 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
         ${htmlFullName}
         <div class="inner-content">${data.content}</div>
     `
+
     body.appendChild(div)
+    body.scrollTop = body.scrollHeight
 })
+
+// Scoll chat to bottom 
+const bodyChat = document.querySelector(".chat .inner-body")
+if (bodyChat) {
+    bodyChat.scrollTop = bodyChat.scrollHeight
+}
