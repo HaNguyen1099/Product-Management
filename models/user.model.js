@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
         },
         phone: String,
         avatar: String, 
-        listFriends: [
+        friendList: [
             {
                 user_id: String,
                 room_chat_id: String
