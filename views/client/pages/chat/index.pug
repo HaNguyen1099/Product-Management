@@ -2,7 +2,9 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug 
 
 block main 
-    .container.my-3       
+    .container.my-3      
+        include ../../partials/list-btn-users.pug        
+
         .row
             .col-12
                 +box-head("Chat")
@@ -12,7 +14,7 @@ block main
                 .chat(my-id=user.id) 
                     .inner-head 
                         .inner-avatar 
-                        .inner-name
+                        .inner-name 
                     .inner-body 
                         each chat in chats
                             div(class=(chat.infoUser.id == user.id ? "inner-outgoing" : "inner-incoming")) 
