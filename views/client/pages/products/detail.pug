@@ -64,4 +64,63 @@ block main
                 .row 
                     .col-12 
                         +box-head("Mô tả sản phẩm")
-                        .inner-desc !{product.description} 
+                        .inner-desc !{product.description}
+
+            .container.my-5
+                .row
+                    .col-12
+                        +box-head("Đánh giá sản phẩm")
+                        .inner-rating
+                            if(product.totalRatings > 0)
+                                p Đánh giá trung bình: #{product.averageRating}/5 (#{product.totalRatings} đánh giá)
+                            
+                            if(user)
+                                form(
+                                    action=`/products/rating/${product.id}`
+                                    method="POST"
+                                    class="rating-form"
+                                )
+                                    .form-group
+                                        label Đánh giá của bạn:
+                                        select(name="rating" class="form-control w-25")
+                                            - for(let i = 1; i <= 5; i++)
+                                                option(value=i) #{i} sao
+                                    button(
+                                        type="submit" 
+                                        class="btn btn-primary"
+                                    ) Gửi đánh giá
+                            else
+                                p Vui lòng đăng nhập để đánh giá sản phẩm
+
+            .container.my-5
+                .row
+                    .col-12
+                        +box-head("Bình luận")
+                        .inner-comments
+                            if(product.comments && product.comments.length > 0)
+                                each comment in product.comments
+                                    .comment-item
+                                        .comment-author Người dùng
+                                        .comment-time #{new Date(comment.createdAt).toLocaleString()}
+                                        .comment-content #{comment.text}
+                            
+                            if(user)
+                                form(
+                                    action=`/products/comment/${product.id}`
+                                    method="POST"
+                                    class="comment-form"
+                                )
+                                    .form-group
+                                        label Bình luận của bạn:
+                                        textarea(
+                                            name="comment"
+                                            class="form-control"
+                                            rows="3"
+                                            required
+                                        )
+                                    button(
+                                        type="submit"
+                                        class="btn btn-primary"
+                                    ) Gửi bình luận
+                            else
+                                p Vui lòng đăng nhập để bình luận

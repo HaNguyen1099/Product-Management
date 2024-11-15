@@ -517,3 +517,46 @@ body {
 }
 
 /* End box-user */
+
+.inner-rating {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.rating-form {
+  margin-top: 15px;
+}
+
+.inner-comments {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.comment-item {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.comment-time {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.comment-content {
+  margin-top: 5px;
+}
+
+.comment-form {
+  margin-top: 20px;
+}

@@ -80,3 +80,62 @@ module.exports.category = async (req, res) => {
         res.redirect(`/`)
     }
 }
+
+// [POST] /products/rating/:id
+module.exports.rating = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const rating = parseInt(req.body.rating);
+    const userId = res.locals.user.id;
+
+    const product = await Product.findById(id);
+    
+    // Check if user already rated
+    const existingRating = product.ratings.find(item => 
+      item.account_id.toString() === userId.toString()
+    );
+
+    if (existingRating) {
+      existingRating.rating = rating;
+      existingRating.createdAt = new Date();
+    } else {
+      product.ratings.push({
+        account_id: userId,
+        rating: rating
+      });
+    }
+
+    product.calculateAverageRating();
+    await product.save();
+
+    req.flash("success", "Cảm ơn bạn đã đánh giá sản phẩm!");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Đánh giá không thành công!");
+    res.redirect("back");
+  }
+};
+
+// [POST] /products/comment/:id
+module.exports.comment = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const comment = req.body.comment;
+    const userId = res.locals.user.id;
+
+    const product = await Product.findById(id);
+    
+    product.comments.push({
+      account_id: userId,
+      text: comment
+    });
+
+    await product.save();
+
+    req.flash("success", "Bình luận đã được thêm!");
+    res.redirect("back");
+  } catch (error) {
+    req.flash("error", "Thêm bình luận không thành công!");
+    res.redirect("back");
+  }
+};
